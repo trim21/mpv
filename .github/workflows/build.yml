@@ -331,6 +331,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - run: mkdir -p subprojects
       - run: meson wrap install quickjs-ng
 
       - name: Build with meson
