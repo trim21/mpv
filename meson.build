@@ -687,7 +687,7 @@ if javascript_opt != 'disabled'
     endif
 
     if javascript_runtime == 'mujs'
-        javascript_sources += files('player/javascript.c',
+        javascript_sources += files('player/javascript_mujs.c',
                                      'sub/filter_jsre.c')
     elif javascript_runtime == 'quickjs'
         javascript_sources += files('player/javascript_quickjs.c')

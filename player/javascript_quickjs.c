@@ -1,6 +1,6 @@
 /*
  * QuickJS-ng scripting backend for mpv.
- * Mirrors the MuJS-based implementation in player/javascript.c.
+ * Mirrors the MuJS-based implementation in player/javascript_mujs.c.
  */
 
 #include <assert.h>
