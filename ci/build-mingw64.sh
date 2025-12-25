@@ -332,7 +332,6 @@ meson setup $build --cross-file "$prefix_dir/crossfile" $common_args \
   -Dmujs:werror=false \
   -Dmujs:default_library=static \
   -Dlua=luajit \
-  -Djavascript-runtime=quickjs-ng \
   -D{amf,shaderc,spirv-cross,d3d11,javascript}=enabled
 meson compile -C $build
 
