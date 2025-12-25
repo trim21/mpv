@@ -658,25 +658,39 @@ if features['iconv']
 endif
 
 javascript_opt = get_option('javascript')
-javascript_runtime = get_option('javascript-runtime')
 javascript_dep = disabler()
 javascript_sources = []
+javascript_runtime = ''
 
-if not javascript_opt.disabled()
+if javascript_opt != 'disabled'
+    if javascript_opt in ['auto', 'enabled', 'mujs']
+        mujs_dep = dependency('mujs', version: '>= 1.0.0',
+                              required: javascript_opt == 'mujs')
+        if mujs_dep.found()
+            javascript_dep = mujs_dep
+            javascript_runtime = 'mujs'
+        endif
+    endif
+
+    if not javascript_dep.found() and javascript_opt in ['auto', 'enabled', 'quickjs']
+        quickjs_dep = dependency('quickjs-ng', version: '>= 0.11.0',
+                                 fallback: ['quickjs', 'qjs_dep'],
+                                 required: javascript_opt in ['quickjs', 'enabled'])
+        if quickjs_dep.found()
+            javascript_dep = quickjs_dep
+            javascript_runtime = 'quickjs'
+        endif
+    endif
+
+    if javascript_opt == 'enabled' and not javascript_dep.found()
+        error('Javascript enabled but no supported runtime (mujs or quickjs-ng) was found!')
+    endif
+
     if javascript_runtime == 'mujs'
-        javascript_dep = dependency('mujs', version: '>= 1.0.0',
-                                    required: javascript_opt)
-        if javascript_dep.found()
-            javascript_sources += files('player/javascript.c',
-                                         'sub/filter_jsre.c')
-        endif
-    else
-        javascript_dep = dependency('quickjs-ng', version: '>= 0.11.0',
-                                    fallback: ['quickjs', 'qjs_dep'],
-                                    required: javascript_opt)
-        if javascript_dep.found()
-            javascript_sources += files('player/javascript_quickjs.c')
-        endif
+        javascript_sources += files('player/javascript.c',
+                                     'sub/filter_jsre.c')
+    elif javascript_runtime == 'quickjs'
+        javascript_sources += files('player/javascript_quickjs.c')
     endif
 endif
 
