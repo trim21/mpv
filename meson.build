@@ -663,22 +663,22 @@ javascript_sources = []
 javascript_runtime = ''
 
 if javascript_opt != 'disabled'
-    if javascript_opt in ['auto', 'enabled', 'mujs']
-        mujs_dep = dependency('mujs', version: '>= 1.0.0',
-                              required: javascript_opt == 'mujs')
-        if mujs_dep.found()
-            javascript_dep = mujs_dep
-            javascript_runtime = 'mujs'
-        endif
-    endif
-
-    if not javascript_dep.found() and javascript_opt in ['auto', 'enabled', 'quickjs']
+    if javascript_opt in ['auto', 'enabled', 'quickjs']
         quickjs_dep = dependency('quickjs-ng', version: '>= 0.11.0',
                                  fallback: ['quickjs', 'qjs_dep'],
                                  required: javascript_opt in ['quickjs', 'enabled'])
         if quickjs_dep.found()
             javascript_dep = quickjs_dep
             javascript_runtime = 'quickjs'
+        endif
+    endif
+
+    if not javascript_dep.found() and javascript_opt in ['auto', 'enabled', 'mujs']
+        mujs_dep = dependency('mujs', version: '>= 1.0.0',
+                              required: javascript_opt == 'mujs')
+        if mujs_dep.found()
+            javascript_dep = mujs_dep
+            javascript_runtime = 'mujs'
         endif
     endif
 
