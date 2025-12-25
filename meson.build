@@ -664,7 +664,7 @@ javascript_runtime = ''
 
 if javascript_opt != 'disabled'
     if javascript_opt in ['auto', 'enabled', 'quickjs']
-        quickjs_dep = dependency('quickjs-ng', version: '>= 0.11.0',
+        quickjs_dep = dependency('quickjs-ng', version: '>= 0.10.0',
                                  fallback: ['quickjs', 'qjs_dep'],
                                  required: javascript_opt in ['quickjs', 'enabled'])
         if quickjs_dep.found()
