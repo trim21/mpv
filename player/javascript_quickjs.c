@@ -707,13 +707,15 @@ static JSValue js_input_set_section_mouse_area(JSContext *ctx,
   if (argc < 5)
     return JS_ThrowTypeError(ctx,
                              "input_set_section_mouse_area expects 5 args");
-  const char *section = js_to_cstring(ctx, argv[0]);
+  const char *section_const = js_to_cstring(ctx, argv[0]);
+  char *section = talloc_strdup(NULL, section_const);
+  JS_FreeCString(ctx, section_const);
   mp_input_set_section_mouse_area(jctx(ctx)->mpctx->input, section,
                                   js_to_int64_checked(ctx, argv[1], 2),
                                   js_to_int64_checked(ctx, argv[2], 3),
                                   js_to_int64_checked(ctx, argv[3], 4),
                                   js_to_int64_checked(ctx, argv[4], 5));
-  JS_FreeCString(ctx, section);
+  talloc_free(section);
   return push_success(ctx);
 }
 
