@@ -32,6 +32,7 @@ on:
 jobs:
   mingw:
     runs-on: ubuntu-24.04
+    if: false
     env:
       CCACHE_BASEDIR: ${{ github.workspace }}
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -309,7 +310,7 @@ jobs:
 
   linux:
     runs-on: ubuntu-latest
-    if: false
+    if: true
     container:
       image: "registry.opensuse.org/home/mia/images/images/mpv-ci:stable-deps"
       env:
@@ -329,6 +330,8 @@ jobs:
             args: "-Db_lto=true -Db_lto_mode=thin"
     steps:
       - uses: actions/checkout@v6
+
+      - run: meson wrap install quickjs-ng
 
       - name: Build with meson
         id: build
