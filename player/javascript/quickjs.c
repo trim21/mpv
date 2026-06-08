@@ -464,7 +464,7 @@ static int get_obj_properties(void *ta_ctx, JSContext *ctx, JSValueConst obj,
     *keys = talloc_array(ta_ctx, char *, len);
     for (uint32_t i = 0; i < len; i++) {
         const char *name = JS_AtomToCString(ctx, props[i].atom);
-        *keys[i] = talloc_strdup(ta_ctx, name);
+        (*keys)[i] = talloc_strdup(ta_ctx, name);
         JS_FreeCString(ctx, name);
     }
     JS_FreePropertyEnum(ctx, props, len);
@@ -586,7 +586,7 @@ static JSValue js_set_property_native(JSContext *ctx, JSValueConst this_val,
         return JS_ThrowTypeError(ctx, "set_property_native expects 2 args");
     const char *name = js_to_cstring(ctx, argv[0]);
     void *af = talloc_new(NULL);
-    mpv_node node = {0};
+    mpv_node node = {};
     if (js_to_node(af, &node, ctx, argv[1]) < 0) {
         JS_FreeCString(ctx, name);
         talloc_free(af);
@@ -727,6 +727,8 @@ static JSValue js_command_native(JSContext *ctx, JSValueConst this_val,
         talloc_free(af);
         return JS_EXCEPTION;
     }
+    // Clear stale errors so mp.last_error() reflects this command call only.
+    set_last_error(jctx(ctx), 0, NULL);
     mpv_node result = {0};
     int r = mpv_command_node(jclient(ctx), &cmd, &result);
     JSValue ret;
